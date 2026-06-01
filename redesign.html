@@ -5,6 +5,10 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>Serenova Spa & Wellness | A Sanctuary for the Senses</title>
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400;1,600&family=Inter:wght@300;400;500&display=swap" rel="stylesheet" />
+<script src="https://cdn.jsdelivr.net/npm/lenis@1.1.14/dist/lenis.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/ScrollTrigger.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/SplitText.min.js"></script>
 <style>
 :root {
   --green: #2D4A3E;
@@ -71,56 +75,74 @@ body {
 .fade-up.visible { opacity: 1; transform: translateY(0); }
 
 /* ════════════════════════════════
-   SECTION 1 — IMAGE SEQUENCE HERO
+   SECTION 1 — GSAP SCROLL HERO
 ════════════════════════════════ */
 
-#heroWrap {
+/* Hero section: 100vh, GSAP pin adds the scroll space */
+#hero {
   position: relative;
-  height: 400vh;
-}
-#heroSticky {
-  position: sticky;
-  top: 0;
   height: 100vh;
   overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
-#heroCanvas {
+
+/* Background — padded so zoom never reveals edges */
+#heroBg {
   position: absolute;
-  top: 0; left: 0;
-  width: 100%; height: 100%;
-  display: block;
+  inset: -18%;
+  background: url('https://images.unsplash.com/photo-1600334129128-685c5582fd35?auto=format&fit=crop&w=1920&q=85')
+              center / cover no-repeat;
+  transform-origin: center center;
+  will-change: transform;
+  z-index: 0;
 }
-#heroOverlay {
+
+/* Dark gradient veil for text legibility */
+#heroVeil {
   position: absolute;
   inset: 0;
+  background: linear-gradient(
+    to bottom,
+    rgba(5,10,8,.58) 0%,
+    rgba(5,10,8,.28) 48%,
+    rgba(5,10,8,.68) 100%
+  );
+  z-index: 1;
+}
+
+/* Centered text block */
+#heroContent {
+  position: relative;
+  z-index: 2;
+  text-align: center;
+  padding: 0 32px;
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: center;
-  text-align: center;
-  padding: 0 24px;
-  pointer-events: none;
-  background: rgba(0,0,0,.28);
 }
-#heroOverlay button { pointer-events: all; }
 
 .hero-eyebrow {
-  font-size: 11px; font-weight: 300; letter-spacing: 6px;
-  text-transform: uppercase; color: var(--stone); margin-bottom: 22px;
-  opacity: 0; animation: heroFadeIn 1.2s 0.5s ease forwards;
+  font-size: 10px; font-weight: 300; letter-spacing: 6px;
+  text-transform: uppercase; color: var(--stone);
+  margin-bottom: 28px;
 }
-.hero-heading {
+
+/* Title */
+#heroTitle {
   font-family: 'Cormorant Garamond', serif;
-  font-size: clamp(54px, 8.5vw, 112px);
-  font-weight: 300; font-style: italic; line-height: 1.05;
-  margin-bottom: 20px; color: #fff;
-  opacity: 0; animation: heroFadeIn 1.2s 0.9s ease forwards;
+  font-size: clamp(40px, 6.5vw, 90px);
+  font-weight: 300;
+  font-style: italic;
+  color: #fff;
+  line-height: 1.1;
+  letter-spacing: 3px;
+  margin-bottom: 44px;
 }
-.hero-sub {
-  font-size: 14px; font-weight: 300; letter-spacing: 2px;
-  color: rgba(255,255,255,.85); margin-bottom: 44px;
-  opacity: 0; animation: heroFadeIn 1.2s 1.3s ease forwards;
-}
+#heroTitle .char { display: inline-block; transform-origin: 50% 100% -30px; }
+
+/* Reserve button */
 .btn-hero {
   display: inline-block; background: transparent;
   border: 1px solid var(--gold); color: var(--gold);
@@ -128,11 +150,6 @@ body {
   font-weight: 500; letter-spacing: 3px; text-transform: uppercase;
   padding: 16px 42px; cursor: none;
   transition: background .4s, color .4s;
-  opacity: 0; animation: heroFadeIn 1.2s 1.7s ease forwards, heroPulse 3s 2.9s ease-in-out infinite;
-}
-@keyframes heroFadeIn {
-  from { opacity: 0; transform: translateY(18px); }
-  to   { opacity: 1; transform: translateY(0); }
 }
 @keyframes heroPulse {
   0%,100% { box-shadow: 0 0 0 0 rgba(184,147,90,.45); }
@@ -140,26 +157,47 @@ body {
 }
 .btn-hero:hover { background: var(--gold); color: #fff; }
 
+/* Treatment pills — pinned at bottom of hero */
+#heroPills {
+  position: absolute;
+  bottom: 80px; left: 0; right: 0;
+  display: flex;
+  justify-content: center;
+  gap: 12px; flex-wrap: wrap;
+  padding: 0 24px;
+  z-index: 2;
+}
+.pill {
+  padding: 10px 24px;
+  border: 1px solid rgba(184,147,90,.5);
+  color: rgba(255,255,255,.88);
+  font-family: 'Inter', sans-serif;
+  font-size: 10px; letter-spacing: 3px;
+  text-transform: uppercase; font-weight: 300;
+  background: rgba(0,0,0,.22);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border-radius: 28px;
+  white-space: nowrap;
+}
+
+/* Scroll cue */
 .scroll-cue {
-  position: absolute; bottom: 38px; left: 50%;
+  position: absolute; bottom: 22px; left: 50%;
   transform: translateX(-50%);
   display: flex; flex-direction: column; align-items: center; gap: 8px;
-  color: rgba(255,255,255,.6); pointer-events: none;
-  transition: opacity .4s;
-  opacity: 0; animation: heroFadeIn 1s 2.2s ease forwards;
+  color: rgba(255,255,255,.45); pointer-events: none; z-index: 2;
 }
-.scroll-cue span { font-size: 10px; letter-spacing: 3px; text-transform: uppercase; }
+.scroll-cue span { font-size: 9px; letter-spacing: 3px; text-transform: uppercase; }
 .scroll-line {
-  width: 1px; height: 44px;
-  background: linear-gradient(to bottom, rgba(255,255,255,.6), transparent);
+  width: 1px; height: 38px;
+  background: linear-gradient(to bottom, rgba(255,255,255,.45), transparent);
   animation: scrollLine 2s ease-in-out infinite;
 }
 @keyframes scrollLine {
-  0%,100% { opacity: .6; transform: scaleY(1); }
-  50%      { opacity: 1;  transform: scaleY(1.25); }
+  0%,100% { opacity: .45; transform: scaleY(1); }
+  50%      { opacity: 1;   transform: scaleY(1.3); }
 }
-
-/* ════════════════════════════════
    SECTION 2 — BOTANICALS
 ════════════════════════════════ */
 .botanicals {
@@ -466,22 +504,26 @@ footer { background: var(--green); padding: 64px 40px; text-align: center; }
 <!-- Fixed book button -->
 <button class="book-fixed" id="bookFixed">Book Now</button>
 
-<!-- ═══ IMAGE SEQUENCE HERO ═══ -->
-<div id="heroWrap">
-  <div id="heroSticky">
-    <canvas id="heroCanvas"></canvas>
-    <div id="heroOverlay">
-      <p class="hero-eyebrow">Serenova Spa &amp; Wellness</p>
-      <h1 class="hero-heading">A sanctuary<br/>for the senses</h1>
-      <p class="hero-sub">Bespoke treatments &bull; Refined rituals &bull; Total restoration</p>
-      <button class="btn-hero" onclick="openModal()">Reserve Your Experience</button>
-      <div class="scroll-cue" id="scrollCue">
-        <span>Discover</span>
-        <div class="scroll-line"></div>
-      </div>
-    </div>
+<!-- ═══ GSAP HERO ═══ -->
+<section id="hero">
+  <div id="heroBg"></div>
+  <div id="heroVeil"></div>
+  <div id="heroContent">
+    <p class="hero-eyebrow">Est. 2007 &nbsp;&bull;&nbsp; A Sanctuary for the Senses</p>
+    <h1 id="heroTitle">Serenova Spa &amp; Wellness</h1>
+    <button class="btn-hero" onclick="openModal()">Reserve Your Experience</button>
   </div>
-</div>
+  <div id="heroPills">
+    <span class="pill">Massage</span>
+    <span class="pill">Facials</span>
+    <span class="pill">Body Treatments</span>
+    <span class="pill">Stone Therapy</span>
+  </div>
+  <div class="scroll-cue" id="scrollCue">
+    <span>Scroll to explore</span>
+    <div class="scroll-line"></div>
+  </div>
+</section>
 
 <!-- ═══ BOTANICALS ═══ -->
 <section class="botanicals">
@@ -736,74 +778,87 @@ footer { background: var(--green); padding: 64px 40px; text-align: center; }
 
 <script>
 /* ═══════════════════════════════════════════════
-   IMAGE SEQUENCE HERO — SPRITE SHEET
-   Single network request: frames/sprite.jpg
-   1280 x 15120px (21 frames stacked vertically).
-   Canvas draws the correct 1280x720 slice each tick
-   with cover-scaling to fill any viewport size.
+   GSAP HERO — Lenis smooth scroll + ScrollTrigger
+   Pinned section. BG zooms on scroll. Title chars
+   stagger in. Treatment pills drift up from below.
 ═══════════════════════════════════════════════ */
 (function () {
-  const canvas    = document.getElementById('heroCanvas');
-  const ctx       = canvas.getContext('2d');
-  const heroWrap  = document.getElementById('heroWrap');
-  const scrollCue = document.getElementById('scrollCue');
-  const TOTAL     = 21;
-  const FRAME_H   = 720;   // each frame's natural height in the sprite
-  const FRAME_W   = 1280;  // each frame's natural width
+  gsap.registerPlugin(ScrollTrigger);
 
-  // ── Size canvas to viewport; redraw on resize ──
-  function resize() {
-    canvas.width  = window.innerWidth;
-    canvas.height = window.innerHeight;
-    drawFrame(lastIdx);
+  // ── Lenis smooth scroll ──────────────────────
+  const lenis = new Lenis({
+    duration:    1.2,
+    easing:      t => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
+    smoothWheel: true,
+    smoothTouch: false,
+  });
+  lenis.on('scroll', ScrollTrigger.update);
+  gsap.ticker.add(time => lenis.raf(time * 1000));
+  gsap.ticker.lagSmoothing(0);
+
+  // ── Split title into .char spans ─────────────
+  const titleEl = document.getElementById('heroTitle');
+  let chars;
+  if (typeof SplitText !== 'undefined') {
+    chars = new SplitText(titleEl, { type: 'chars', charsClass: 'char' }).chars;
+  } else {
+    const text = titleEl.textContent;
+    titleEl.innerHTML = '';
+    chars = Array.from(text).map(c => {
+      const s = document.createElement('span');
+      s.className = 'char';
+      s.textContent = c === ' ' ? ' ' : c;
+      s.style.display = 'inline-block';
+      titleEl.appendChild(s);
+      return s;
+    });
   }
-  window.addEventListener('resize', resize);
+  gsap.set(titleEl, { perspective: 700 });
 
-  // ── Draw one frame from the sprite with cover scaling ──
-  let lastIdx = 0;
-  function drawFrame(idx) {
-    if (!sprite.complete || !sprite.naturalHeight) return;
-    const cW = canvas.width, cH = canvas.height;
-    const scale = Math.max(cW / FRAME_W, cH / FRAME_H);
-    const dW    = FRAME_W * scale,  dH = FRAME_H * scale;
-    const dx    = (cW - dW) / 2,   dy = (cH - dH) / 2;
-    ctx.drawImage(sprite, 0, idx * FRAME_H, FRAME_W, FRAME_H, dx, dy, dW, dH);
-    lastIdx = idx;
-  }
-
-  // ── Lock scroll until sprite is ready ──
-  document.body.style.overflow = 'hidden';
-
-  const sprite = new Image();
-  sprite.onload = function () {
-    resize();                          // sets canvas size + draws frame 0
-    document.body.style.overflow = ''; // unlock scroll
-
-    // ── rAF loop — lerp float index, draw on integer change ──
-    let lerpIdx = 0;
-
-    function getTarget() {
-      const scrollable = heroWrap.offsetHeight - window.innerHeight;
-      const progress   = Math.min(Math.max(window.scrollY / scrollable, 0), 1);
-      return progress * (TOTAL - 1);
+  // ── Master scrub timeline, pinned for 200 vh ─
+  const tl = gsap.timeline({
+    scrollTrigger: {
+      trigger:      '#hero',
+      start:        'top top',
+      end:          '+=200%',
+      pin:          true,
+      scrub:        1.4,
+      anticipatePin: 1,
     }
+  });
 
-    function tick() {
-      requestAnimationFrame(tick);
-      lerpIdx += (getTarget() - lerpIdx) * 0.12;
-      const idx = Math.min(Math.round(lerpIdx), TOTAL - 1);
-      if (idx !== lastIdx) drawFrame(idx);
+  // BG zoom — runs the full duration (walks forward)
+  tl.to('#heroBg', { scale: 1.4, ease: 'none', duration: 1 }, 0);
 
-      if (scrollCue) {
-        const scrollable = heroWrap.offsetHeight - window.innerHeight;
-        const p = Math.min(Math.max(window.scrollY / scrollable, 0), 1);
-        scrollCue.style.opacity = Math.max(0, 1 - p / 0.08);
-      }
-    }
-    tick();
-  };
-  sprite.onerror = () => { document.body.style.overflow = ''; };
-  sprite.src = 'frames/sprite.jpg';
+  // Eyebrow fades in first
+  tl.fromTo('.hero-eyebrow',
+    { opacity: 0, y: 22 },
+    { opacity: 1, y: 0,  ease: 'power2.out', duration: 0.2 }, 0);
+
+  // Chars rise up and rotate in, staggered
+  tl.fromTo(chars,
+    { opacity: 0, y: 72, rotateX: -60, transformOrigin: '50% 100% -30px' },
+    { opacity: 1, y: 0,  rotateX: 0,
+      stagger:  0.022,
+      ease:     'power3.out',
+      duration: 0.42 }, 0.04);
+
+  // Reserve button appears after chars
+  tl.fromTo('.btn-hero',
+    { opacity: 0, y: 24 },
+    { opacity: 1, y: 0, ease: 'power2.out', duration: 0.2 }, 0.5);
+
+  // Pills drift up from below, staggered
+  tl.fromTo('.pill',
+    { opacity: 0, y: 88 },
+    { opacity: 1, y: 0,
+      stagger:  0.11,
+      ease:     'power2.out',
+      duration: 0.38 }, 0.6);
+
+  // Scroll cue fades out as pills appear
+  tl.to('#scrollCue', { opacity: 0, ease: 'power1.in', duration: 0.12 }, 0.5);
+
 })();
 
 // ── Custom cursor
