@@ -739,55 +739,79 @@ footer { background: var(--green); padding: 64px 40px; text-align: center; }
 <script>
 /* ═══════════════════════════════════════════════
    IMAGE SEQUENCE HERO
-   21 frames preloaded on page load. rAF loop lerps
-   a float index and swaps img.src on integer change.
+   All 21 frames are decoded into Image objects the
+   moment the script runs. Scroll is locked via
+   overflow:hidden on <body> until every onload fires.
+   Only then is the rAF scroll listener activated —
+   guaranteeing zero on-demand loading during scrub.
 ═══════════════════════════════════════════════ */
 (function () {
   const img       = document.getElementById('heroImg');
   const heroWrap  = document.getElementById('heroWrap');
   const scrollCue = document.getElementById('scrollCue');
+  const TOTAL     = 21;
 
-  const TOTAL = 21;
+  // ── Lock scroll immediately so the user can't
+  //    interact before frames are in memory ──
+  document.body.style.overflow = 'hidden';
 
+  // ── Build all src paths ──
   const srcs = [];
   for (let i = 1; i <= TOTAL; i++) {
     srcs.push('frames/ezgif-frame-' + String(i).padStart(3, '0') + '.jpg');
   }
 
+  // ── Preload: create every Image object right now,
+  //    before any scroll event could fire ──
   let loaded = 0;
-  let ready  = false;
   const imgs = srcs.map(src => {
-    const el = new Image();
-    el.onload = () => { if (++loaded === TOTAL) { ready = true; } };
+    const el  = new Image();
+    el.onload = el.onerror = () => {
+      // count both successes and failures so we never stall
+      if (++loaded === TOTAL) onReady();
+    };
     el.src = src;
     return el;
   });
 
-  let lerpIdx = 0;
-  let lastIdx = -1;
+  // ── Called once every frame has reported loaded ──
+  function onReady() {
+    // Show frame 1 from the decoded image object (not a string path)
+    img.src = imgs[0].src;
 
-  function getTarget() {
-    const scrollable = heroWrap.offsetHeight - window.innerHeight;
-    const progress   = Math.min(Math.max(window.scrollY / scrollable, 0), 1);
-    return progress * (TOTAL - 1);
-  }
+    // Unlock scroll
+    document.body.style.overflow = '';
 
-  function tick() {
-    requestAnimationFrame(tick);
-    if (!ready) return;
+    // Wire up the rAF loop now that all frames are in memory
+    let lerpIdx = 0;
+    let lastIdx = -1;
 
-    lerpIdx += (getTarget() - lerpIdx) * 0.12;
-    const idx = Math.min(Math.round(lerpIdx), TOTAL - 1);
-    if (idx !== lastIdx) { img.src = imgs[idx].src; lastIdx = idx; }
-
-    if (scrollCue) {
+    function getTarget() {
       const scrollable = heroWrap.offsetHeight - window.innerHeight;
-      const p = Math.min(Math.max(window.scrollY / scrollable, 0), 1);
-      scrollCue.style.opacity = Math.max(0, 1 - p / 0.08);
+      const progress   = Math.min(Math.max(window.scrollY / scrollable, 0), 1);
+      return progress * (TOTAL - 1);
     }
-  }
 
-  tick();
+    function tick() {
+      requestAnimationFrame(tick);
+
+      lerpIdx += (getTarget() - lerpIdx) * 0.12;
+      const idx = Math.min(Math.round(lerpIdx), TOTAL - 1);
+
+      if (idx !== lastIdx) {
+        img.src = imgs[idx].src;
+        lastIdx = idx;
+      }
+
+      if (scrollCue) {
+        const scrollable = heroWrap.offsetHeight - window.innerHeight;
+        const p = Math.min(Math.max(window.scrollY / scrollable, 0), 1);
+        scrollCue.style.opacity = Math.max(0, 1 - p / 0.08);
+      }
+    }
+
+    tick();
+  }
 })();
 
 // ── Custom cursor
