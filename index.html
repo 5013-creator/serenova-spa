@@ -1,0 +1,463 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Serenova Spa & Wellness | Massage, Facials & More</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: Arial, Helvetica, sans-serif;
+    background-color: #ffffff;
+    color: #222;
+  }
+
+  /* ── TOP HOURS BAR ── */
+  .top-bar {
+    background-color: #f0f0f0;
+    border-bottom: 1px solid #ccc;
+    text-align: center;
+    padding: 7px 10px;
+    font-size: 13px;
+    color: #444;
+  }
+
+  /* ── HEADER ── */
+  header {
+    background-color: #ffffff;
+    text-align: center;
+    padding: 24px 10px 16px;
+    border-bottom: 2px solid #ccc;
+  }
+  .logo {
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 42px;
+    font-weight: bold;
+    color: #222;
+    display: block;
+    letter-spacing: 1px;
+  }
+  .tagline {
+    font-size: 13px;
+    color: #666;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    margin-top: 6px;
+  }
+
+  /* ── NAVIGATION ── */
+  nav {
+    background-color: #aaa;
+    text-align: center;
+    padding: 0;
+  }
+  nav a {
+    display: inline-block;
+    color: #fff;
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 13px;
+    font-weight: bold;
+    text-decoration: none;
+    padding: 11px 16px;
+    text-transform: uppercase;
+    border-right: 1px solid #999;
+  }
+  nav a:first-child { border-left: 1px solid #999; }
+  nav a:hover { background-color: #888; }
+
+  /* ── HERO IMAGE ── */
+  .hero {
+    width: 100%;
+    height: 320px;
+    object-fit: cover;
+    object-position: center 30%;
+    display: block;
+  }
+
+  /* ── SECTION WRAPPER ── */
+  .section-wrap {
+    max-width: 960px;
+    margin: 0 auto;
+    padding: 30px 20px;
+  }
+
+  /* ── WELCOME BANNER ── */
+  .welcome-banner {
+    background-color: #f9f9f9;
+    border-top: 3px solid #aaa;
+    border-bottom: 3px solid #aaa;
+    text-align: center;
+    padding: 22px 30px;
+  }
+  .welcome-banner h2 {
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 26px;
+    color: #222;
+    margin-bottom: 10px;
+    font-weight: bold;
+  }
+  .welcome-banner p {
+    font-size: 14px;
+    line-height: 1.75;
+    color: #444;
+    max-width: 700px;
+    margin: 0 auto;
+  }
+
+  /* ── PHOTO GRID ── */
+  .photo-grid {
+    display: table;
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 6px;
+    margin: 0 auto;
+  }
+  .photo-grid-row { display: table-row; }
+  .photo-grid-cell {
+    display: table-cell;
+    width: 25%;
+    vertical-align: top;
+    text-align: center;
+  }
+  .photo-grid-cell img {
+    width: 100%;
+    height: 165px;
+    object-fit: cover;
+    border: 2px solid #ccc;
+    display: block;
+  }
+  .photo-grid-cell p {
+    font-size: 12px;
+    color: #555;
+    font-style: italic;
+    margin-top: 4px;
+  }
+
+  /* ── DIVIDER ── */
+  .divider {
+    text-align: center;
+    margin: 24px 0 18px;
+    color: #aaa;
+    font-size: 18px;
+    letter-spacing: 6px;
+  }
+
+  /* ── ABOUT + HOURS TWO COLUMN ── */
+  .two-col {
+    display: table;
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 20px;
+  }
+  .two-col-left, .two-col-right {
+    display: table-cell;
+    vertical-align: top;
+  }
+  .two-col-left { width: 58%; }
+  .two-col-right { width: 42%; }
+
+  .about-box {
+    background-color: #fff;
+    border: 1px solid #ccc;
+    padding: 18px 20px;
+  }
+  .about-box h3 {
+    font-size: 17px;
+    color: #222;
+    text-align: center;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    border-bottom: 2px solid #ccc;
+    padding-bottom: 8px;
+    margin-bottom: 12px;
+  }
+  .about-box p {
+    font-size: 14px;
+    line-height: 1.75;
+    color: #444;
+    margin-bottom: 10px;
+    text-align: center;
+  }
+
+  .hours-box {
+    background-color: #f0f0f0;
+    border: 1px solid #ccc;
+    padding: 18px 20px;
+    text-align: center;
+  }
+  .hours-box h3 {
+    font-size: 17px;
+    color: #222;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    border-bottom: 2px solid #ccc;
+    padding-bottom: 8px;
+    margin-bottom: 14px;
+  }
+  .hours-box p {
+    font-size: 14px;
+    line-height: 2.1;
+    color: #444;
+  }
+  .hours-box .book-note {
+    font-size: 12px;
+    color: #666;
+    margin-top: 12px;
+    font-style: italic;
+  }
+
+  /* ── SPECIALS STRIP ── */
+  .specials-strip {
+    background-color: #e8e8e8;
+    border-top: 2px solid #aaa;
+    border-bottom: 2px solid #aaa;
+    color: #222;
+    text-align: center;
+    padding: 14px 20px;
+    font-size: 14px;
+  }
+  .specials-strip strong { font-size: 15px; }
+
+  /* ── SERVICES SECTION ── */
+  .services-section {
+    background-color: #f9f9f9;
+    border-top: 2px solid #ccc;
+    border-bottom: 2px solid #ccc;
+    padding: 28px 20px;
+  }
+  .services-section h2 {
+    font-size: 22px;
+    color: #222;
+    margin-bottom: 16px;
+    font-weight: bold;
+    text-align: center;
+    border-bottom: 1px solid #ccc;
+    padding-bottom: 8px;
+  }
+  .services-list {
+    max-width: 780px;
+    margin: 0 auto;
+  }
+  .services-list table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 14px;
+  }
+  .services-list table th {
+    background-color: #e0e0e0;
+    border: 1px solid #ccc;
+    padding: 8px 12px;
+    text-align: left;
+    font-weight: bold;
+  }
+  .services-list table td {
+    border: 1px solid #ccc;
+    padding: 8px 12px;
+    vertical-align: top;
+    color: #333;
+  }
+  .services-list table tr:nth-child(even) td {
+    background-color: #f5f5f5;
+  }
+
+  /* ── FOOTER ── */
+  footer {
+    background-color: #aaa;
+    color: #ccc;
+    text-align: center;
+    padding: 20px 10px;
+    font-size: 12px;
+    line-height: 2;
+  }
+  footer .footer-name {
+    font-size: 18px;
+    font-weight: bold;
+    color: #fff;
+    display: block;
+    margin-bottom: 4px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+  }
+  footer a { color: #fff; text-decoration: none; }
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<header>
+  <span class="logo">Serenova Spa &amp; Wellness</span>
+  <div class="tagline">Massage &bull; Facials &bull; Body Treatments &bull; Nail Care</div>
+</header>
+
+<!-- NAVIGATION -->
+<nav>
+  <a href="#">Home</a>
+  <a href="#">About the Spa</a>
+  <a href="#">Our Services</a>
+  <a href="#">Specials</a>
+  <a href="#">Gift Cards</a>
+  <a href="#">Meet the Staff</a>
+  <a href="#">Reviews</a>
+  <a href="#">Contact Us</a>
+</nav>
+
+<!-- HERO IMAGE -->
+<img
+  src="https://images.unsplash.com/photo-1544161515-4ab6ce6db874?auto=format&fit=crop&w=1200&h=320&q=80"
+  alt="Serenova Spa & Wellness"
+  class="hero"
+/>
+
+<!-- WELCOME BANNER -->
+<div class="welcome-banner">
+  <div class="section-wrap" style="padding-top:0; padding-bottom:0;">
+    <h2>Welcome to Serenova Spa &amp; Wellness</h2>
+    <p>
+      We are a full service day spa and we offer a wide range of massage,
+      facial, and wellness services for men and women of all ages.
+      Our staff is friendly, professional, and dedicated to making sure you leave feeling amazing.
+      We truly believe everyone deserves to be pampered and we are here to make that happen for you!!
+      Come in and see why our clients keep coming back again and again. We can't wait to meet you!
+    </p>
+  </div>
+</div>
+
+<!-- PHOTO GRID -->
+<div class="section-wrap" style="padding-bottom: 10px;">
+  <div class="divider">~ &hearts; ~</div>
+  <div class="photo-grid">
+    <div class="photo-grid-row">
+      <div class="photo-grid-cell">
+        <img src="https://images.unsplash.com/photo-1540555700478-4be289fbecef?auto=format&fit=crop&w=280&h=165&q=80" alt="Our Spa" />
+        <p>Our relaxing spa space</p>
+      </div>
+      <div class="photo-grid-cell">
+        <img src="https://images.unsplash.com/photo-1519823551278-64ac92734fb1?auto=format&fit=crop&w=280&h=165&q=80" alt="Massage Room" />
+        <p>Private massage rooms</p>
+      </div>
+
+      <div class="photo-grid-cell">
+        <img src="https://images.unsplash.com/photo-1604654894610-df63bc536371?auto=format&fit=crop&w=280&h=165&q=80" alt="Nail Care" />
+        <p>Nail services &amp; more</p>
+      </div>
+    </div>
+  </div>
+  <div class="divider">~ &hearts; ~</div>
+</div>
+
+<!-- ABOUT + HOURS TWO COLUMN -->
+<div class="section-wrap" style="padding-top: 6px;">
+  <div class="two-col">
+    <div class="two-col-left">
+      <div class="about-box">
+        <h3>About Serenova Spa &amp; Wellness</h3>
+        <p>
+          Serenova Spa &amp; Wellness has been proudly serving our community since 2007.
+          We are a locally owned and operated day spa and we take great pride in providing a warm,
+          welcoming, and professional environment for all of our guests.
+        </p>
+        <p>
+          We offer a full menu of services including Swedish massage, deep tissue massage, hot stone
+          massage, prenatal massage, signature facials, anti-aging treatments, body wraps, waxing,
+          manicures, pedicures, and so much more. We also carry a full line of retail spa products
+          that make perfect gifts!!
+        </p>
+        <p>
+          Our staff are all licensed and certified professionals who truly love what they do.
+          We believe that self care is not a luxury it is a necessity, and we are here to help you
+          take care of yourself!! Whether you are treating yourself or buying a gift for someone
+          special, Serenova is the place to be.
+        </p>
+        <p>
+          We accept walk-ins based on availability but appointments are always recommended especially
+          on weekends. You deserve it!!
+        </p>
+      </div>
+    </div>
+    <div class="two-col-right">
+      <div class="hours-box">
+        <h3>Hours of Operation</h3>
+        <p>
+          Monday &mdash; 10:00 AM &ndash; 8:00 PM<br/>
+          Tuesday &mdash; 10:00 AM &ndash; 8:00 PM<br/>
+          Wednesday &mdash; 10:00 AM &ndash; 8:00 PM<br/>
+          Thursday &mdash; 10:00 AM &ndash; 9:00 PM<br/>
+          Friday &mdash; 9:00 AM &ndash; 9:00 PM<br/>
+          Saturday &mdash; 9:00 AM &ndash; 9:00 PM<br/>
+          Sunday &mdash; 10:00 AM &ndash; 6:00 PM
+        </p>
+        <p class="book-note">Walk-ins welcome based on availability.<br/>Appointments recommended on weekends.</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- SERVICES SECTION -->
+<div class="services-section">
+  <h2>Our Services</h2>
+  <div class="services-list">
+    <table>
+      <tr>
+        <th>Service</th>
+        <th>Price</th>
+      </tr>
+      <tr>
+        <td><strong>Swedish Massage</strong></td>
+        <td>60 min — $70<br/>90 min — $100</td>
+      </tr>
+      <tr>
+        <td><strong>Deep Tissue Massage</strong></td>
+        <td>60 min — $80<br/>90 min — $115</td>
+      </tr>
+      <tr>
+        <td><strong>Hot Stone Massage</strong></td>
+        <td>75 min — $120</td>
+      </tr>
+      <tr>
+        <td><strong>Prenatal Massage</strong></td>
+        <td>60 min — $80</td>
+      </tr>
+      <tr>
+        <td><strong>Classic Facial</strong></td>
+        <td>50 min — $65</td>
+      </tr>
+      <tr>
+        <td><strong>Anti-Aging Facial</strong></td>
+        <td>60 min — $90</td>
+      </tr>
+      <tr>
+        <td><strong>Manicure</strong></td>
+        <td>45 min — $35</td>
+      </tr>
+      <tr>
+        <td><strong>Pedicure (Deluxe)</strong></td>
+        <td>60 min — $55</td>
+      </tr>
+      <tr>
+        <td><strong>Body Wrap</strong></td>
+        <td>60 min — $90</td>
+      </tr>
+      <tr>
+        <td><strong>Waxing</strong></td>
+        <td>Starting at $20</td>
+      </tr>
+      <tr>
+        <td><strong>Spa Packages</strong></td>
+        <td>Starting at $140</td>
+      </tr>
+    </table>
+  </div>
+</div>
+
+<!-- FOOTER -->
+<footer>
+  <span class="footer-name">Serenova Spa &amp; Wellness</span>
+  Open 7 Days a Week &nbsp;|&nbsp; Mon&ndash;Wed 10AM&ndash;8PM &nbsp;|&nbsp; Thu 10AM&ndash;9PM &nbsp;|&nbsp; Fri&ndash;Sat 9AM&ndash;9PM &nbsp;|&nbsp; Sun 10AM&ndash;6PM<br/>
+  <br/>
+  &copy; 2024 Serenova Spa &amp; Wellness. All Rights Reserved.<br/>
+  <span style="font-size: 11px; color: #999;">Website designed by owner. Please stop in or send us a message with any questions!!</span>
+</footer>
+
+</body>
+</html>

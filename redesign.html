@@ -1,0 +1,883 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Serenova Spa & Wellness | A Sanctuary for the Senses</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400;1,600&family=Inter:wght@300;400;500&display=swap" rel="stylesheet" />
+<style>
+:root {
+  --green: #2D4A3E;
+  --stone: #C4A882;
+  --cream: #FAF7F2;
+  --gold: #B8935A;
+  --offwhite: #F0EDE8;
+  --dark: #1a2d25;
+}
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+body {
+  font-family: 'Inter', 'Helvetica Neue', sans-serif;
+  background: var(--cream);
+  color: var(--green);
+  cursor: none;
+  overflow-x: hidden;
+}
+
+/* ── CURSOR ── */
+.cursor {
+  width: 18px; height: 18px;
+  border-radius: 50%;
+  background: rgba(184,147,90,0.55);
+  box-shadow: 0 0 14px rgba(184,147,90,0.5);
+  position: fixed;
+  pointer-events: none;
+  z-index: 9999;
+  transform: translate(-50%,-50%);
+  transition: width .2s, height .2s, background .2s;
+}
+.cursor.big { width: 38px; height: 38px; background: rgba(184,147,90,0.2); }
+
+/* ── FIXED UI ── */
+.sound-btn {
+  position: fixed; top: 24px; right: 24px; z-index: 1000;
+  width: 48px; height: 48px; border-radius: 50%;
+  background: rgba(45,74,62,0.85);
+  border: 1px solid var(--gold);
+  display: flex; align-items: center; justify-content: center;
+  cursor: none; backdrop-filter: blur(8px);
+  transition: all .3s;
+}
+.sound-btn:hover { background: var(--green); transform: scale(1.1); }
+.sound-btn svg { width: 20px; height: 20px; stroke: var(--gold); fill: none; stroke-width: 1.5; }
+
+.book-fixed {
+  position: fixed; bottom: 32px; right: 32px; z-index: 1000;
+  background: var(--gold); color: #fff; border: none;
+  font-family: 'Inter', sans-serif; font-size: 11px;
+  font-weight: 500; letter-spacing: 2.5px; text-transform: uppercase;
+  padding: 14px 26px; cursor: none;
+  animation: fixedPulse 2.5s ease-in-out infinite;
+  transition: background .3s;
+}
+.book-fixed:hover { background: var(--green); animation: none; }
+@keyframes fixedPulse {
+  0%,100% { box-shadow: 0 0 0 0 rgba(184,147,90,.5); }
+  50%      { box-shadow: 0 0 0 12px rgba(184,147,90,0); }
+}
+
+/* ── SCROLL FADE ── */
+.fade-up { opacity: 0; transform: translateY(36px); transition: opacity .85s ease, transform .85s ease; }
+.fade-up.visible { opacity: 1; transform: translateY(0); }
+
+/* ════════════════════════════════
+   SECTION 1 — IMAGE SEQUENCE HERO
+════════════════════════════════ */
+
+#heroWrap {
+  position: relative;
+  height: 400vh;
+}
+#heroSticky {
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  overflow: hidden;
+}
+#heroImg {
+  position: absolute;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  object-fit: cover;
+  object-position: center;
+  display: block;
+}
+#heroOverlay {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 0 24px;
+  pointer-events: none;
+  background: rgba(0,0,0,.28);
+}
+#heroOverlay button { pointer-events: all; }
+
+.hero-eyebrow {
+  font-size: 11px; font-weight: 300; letter-spacing: 6px;
+  text-transform: uppercase; color: var(--stone); margin-bottom: 22px;
+  opacity: 0; animation: heroFadeIn 1.2s 0.5s ease forwards;
+}
+.hero-heading {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: clamp(54px, 8.5vw, 112px);
+  font-weight: 300; font-style: italic; line-height: 1.05;
+  margin-bottom: 20px; color: #fff;
+  opacity: 0; animation: heroFadeIn 1.2s 0.9s ease forwards;
+}
+.hero-sub {
+  font-size: 14px; font-weight: 300; letter-spacing: 2px;
+  color: rgba(255,255,255,.85); margin-bottom: 44px;
+  opacity: 0; animation: heroFadeIn 1.2s 1.3s ease forwards;
+}
+.btn-hero {
+  display: inline-block; background: transparent;
+  border: 1px solid var(--gold); color: var(--gold);
+  font-family: 'Inter', sans-serif; font-size: 11px;
+  font-weight: 500; letter-spacing: 3px; text-transform: uppercase;
+  padding: 16px 42px; cursor: none;
+  transition: background .4s, color .4s;
+  opacity: 0; animation: heroFadeIn 1.2s 1.7s ease forwards, heroPulse 3s 2.9s ease-in-out infinite;
+}
+@keyframes heroFadeIn {
+  from { opacity: 0; transform: translateY(18px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+@keyframes heroPulse {
+  0%,100% { box-shadow: 0 0 0 0 rgba(184,147,90,.45); }
+  50%      { box-shadow: 0 0 0 12px rgba(184,147,90,0); }
+}
+.btn-hero:hover { background: var(--gold); color: #fff; }
+
+.scroll-cue {
+  position: absolute; bottom: 38px; left: 50%;
+  transform: translateX(-50%);
+  display: flex; flex-direction: column; align-items: center; gap: 8px;
+  color: rgba(255,255,255,.6); pointer-events: none;
+  transition: opacity .4s;
+  opacity: 0; animation: heroFadeIn 1s 2.2s ease forwards;
+}
+.scroll-cue span { font-size: 10px; letter-spacing: 3px; text-transform: uppercase; }
+.scroll-line {
+  width: 1px; height: 44px;
+  background: linear-gradient(to bottom, rgba(255,255,255,.6), transparent);
+  animation: scrollLine 2s ease-in-out infinite;
+}
+@keyframes scrollLine {
+  0%,100% { opacity: .6; transform: scaleY(1); }
+  50%      { opacity: 1;  transform: scaleY(1.25); }
+}
+
+/* ════════════════════════════════
+   SECTION 2 — BOTANICALS
+════════════════════════════════ */
+.botanicals {
+  position: relative; height: 480px; background: var(--cream);
+  display: flex; align-items: center; justify-content: center; overflow: hidden;
+}
+.leaf { position: absolute; opacity: .13; z-index: 1; pointer-events: none; }
+.leaf-1 { top: -10%; left:  2%; animation: driftA 22s linear infinite; }
+.leaf-2 { top: 15%; right: 3%; animation: driftB 28s linear infinite; }
+.leaf-3 { bottom: -5%; left: 22%; animation: driftC 19s linear infinite; }
+.leaf-4 { top: 25%; left: 58%; animation: driftA 24s linear infinite reverse; }
+.leaf-5 { bottom: 15%; right: 8%; animation: driftB 32s linear infinite reverse; }
+@keyframes driftA {
+  0%   { transform: translate(0,0)   rotate(0deg);   opacity: .13; }
+  50%  { transform: translate(30px,80px) rotate(180deg); opacity: .18; }
+  100% { transform: translate(-10px,150px) rotate(360deg); opacity: 0; }
+}
+@keyframes driftB {
+  0%   { transform: translate(0,0)    rotate(20deg); opacity: .13; }
+  50%  { transform: translate(-50px,70px) rotate(200deg); opacity: .18; }
+  100% { transform: translate(15px,150px) rotate(380deg); opacity: 0; }
+}
+@keyframes driftC {
+  0%   { transform: translate(0,0)   rotate(-10deg); opacity: .13; }
+  100% { transform: translate(60px,-130px) rotate(170deg); opacity: 0; }
+}
+.bot-text { position: relative; z-index: 2; text-align: center; }
+.bot-text h2 {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: clamp(38px,5.5vw,76px);
+  font-weight: 300; font-style: italic; color: var(--green); line-height: 1.2;
+}
+.bot-text p {
+  font-size: 11px; letter-spacing: 5px; text-transform: uppercase;
+  color: var(--gold); margin-top: 18px; font-weight: 300;
+}
+
+/* ════════════════════════════════
+   SHARED LABELS / HEADINGS
+════════════════════════════════ */
+.sec-label {
+  display: block; font-size: 11px; font-weight: 300;
+  letter-spacing: 5px; text-transform: uppercase;
+  color: var(--gold); margin-bottom: 14px;
+}
+.sec-heading {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: clamp(34px,4vw,58px);
+  font-weight: 300; color: var(--green); line-height: 1.15;
+}
+
+/* ════════════════════════════════
+   SECTION 3 — TREATMENTS
+════════════════════════════════ */
+.treatments { background: var(--offwhite); padding: 100px 60px; }
+.treatments-top { max-width: 1200px; margin: 0 auto 48px; }
+.filter-row { display: flex; gap: 12px; flex-wrap: wrap; margin-top: 36px; }
+.filt {
+  font-family: 'Inter', sans-serif; font-size: 11px; font-weight: 400;
+  letter-spacing: 2px; text-transform: uppercase;
+  padding: 10px 28px; border: 1px solid var(--green);
+  background: transparent; color: var(--green); cursor: none; transition: all .3s;
+}
+.filt.active, .filt:hover { background: var(--green); color: var(--cream); }
+
+.cards-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(255px,1fr));
+  gap: 22px; max-width: 1200px; margin: 0 auto;
+}
+.flip-card { height: 310px; perspective: 1000px; cursor: none; }
+.flip-inner {
+  position: relative; width: 100%; height: 100%;
+  transform-style: preserve-3d;
+  transition: transform .7s cubic-bezier(.4,0,.2,1);
+}
+.flip-card:hover .flip-inner { transform: rotateY(180deg); }
+.flip-front, .flip-back {
+  position: absolute; inset: 0; backface-visibility: hidden;
+  display: flex; flex-direction: column; align-items: center;
+  justify-content: center; padding: 38px 28px;
+}
+.flip-front { background: var(--green); color: var(--cream); }
+.flip-front .f-line { width: 38px; height: 1px; background: var(--stone); margin-bottom: 18px; }
+.flip-front h3 {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 27px; font-weight: 300; font-style: italic;
+  text-align: center; line-height: 1.3; margin-bottom: 14px;
+}
+.flip-front .f-cat { font-size: 10px; letter-spacing: 3px; text-transform: uppercase; color: var(--stone); }
+.flip-back {
+  background: var(--cream); transform: rotateY(180deg);
+  border: 1px solid rgba(196,168,130,.5); text-align: center;
+}
+.flip-back h3 { font-family: 'Cormorant Garamond', serif; font-size: 21px; color: var(--green); margin-bottom: 10px; }
+.flip-back .b-meta { font-size: 11px; letter-spacing: 1px; color: var(--gold); font-weight: 500; margin-bottom: 14px; }
+.flip-back p { font-size: 13px; line-height: 1.7; color: #666; font-weight: 300; }
+.flip-back .b-price {
+  margin-top: 14px; font-family: 'Cormorant Garamond', serif;
+  font-size: 30px; font-weight: 300; color: var(--green);
+}
+
+/* ════════════════════════════════
+   SECTION 4 — PARALLAX
+════════════════════════════════ */
+.parallax-sec {
+  position: relative; height: 58vh;
+  display: flex; align-items: center; justify-content: center; overflow: hidden;
+}
+.parallax-bg {
+  position: absolute; inset: -20%;
+  background: url('https://images.unsplash.com/photo-1600334129128-685c5582fd35?auto=format&fit=crop&w=1600&q=80') center/cover;
+  will-change: transform;
+}
+.parallax-dim { position: absolute; inset: 0; background: rgba(0,0,0,.5); }
+.parallax-txt { position: relative; z-index: 2; text-align: center; color: #fff; padding: 0 24px; }
+.parallax-txt h2 {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: clamp(42px,6.5vw,96px);
+  font-weight: 300; font-style: italic; line-height: 1.1;
+}
+.parallax-txt p { font-size: 11px; letter-spacing: 5px; text-transform: uppercase; color: var(--stone); margin-top: 18px; }
+
+/* ════════════════════════════════
+   SECTION 5 — BEFORE / AFTER
+════════════════════════════════ */
+.ba-section { background: var(--cream); padding: 100px 40px; text-align: center; }
+.ba-section .sec-heading { margin-bottom: 12px; }
+.ba-section > p { font-size: 14px; color: #888; font-weight: 300; margin-bottom: 56px; letter-spacing: .5px; }
+.ba-wrap {
+  position: relative; width: 100%; max-width: 880px; height: 480px;
+  margin: 0 auto; overflow: hidden; cursor: col-resize; user-select: none;
+}
+.ba-after {
+  position: absolute; inset: 0;
+  background: url('https://images.unsplash.com/photo-1487412947147-5cebf100ffc2?auto=format&fit=crop&w=880&h=480&q=80') center top/cover;
+}
+.ba-before {
+  position: absolute; inset: 0;
+  background: url('https://images.unsplash.com/photo-1556228720-195a672e8a03?auto=format&fit=crop&w=880&h=480&q=80') center top/cover;
+  clip-path: inset(0 50% 0 0);
+}
+.ba-bar { position: absolute; top: 0; left: 50%; width: 2px; height: 100%; background: #fff; z-index: 5; transform: translateX(-50%); }
+.ba-knob {
+  position: absolute; top: 50%; left: 50%; transform: translate(-50%,-50%);
+  width: 46px; height: 46px; border-radius: 50%; background: #fff;
+  display: flex; align-items: center; justify-content: center;
+  box-shadow: 0 4px 20px rgba(0,0,0,.25); color: var(--green);
+  font-size: 15px; font-weight: 300;
+}
+.ba-tag {
+  position: absolute; bottom: 18px; padding: 5px 14px;
+  background: rgba(0,0,0,.48); color: #fff;
+  font-size: 10px; letter-spacing: 2.5px; text-transform: uppercase;
+}
+.ba-tag.l { left: 18px; }
+.ba-tag.r { right: 18px; }
+
+/* ════════════════════════════════
+   SECTION 6 — THERAPISTS
+════════════════════════════════ */
+.therapists { background: var(--green); padding: 100px 0; overflow: hidden; }
+.therapists-hd { padding: 0 60px; margin-bottom: 56px; }
+.therapists-hd .sec-label { color: var(--stone); }
+.therapists-hd .sec-heading { color: var(--cream); }
+.th-row {
+  display: flex; gap: 24px; padding: 0 60px 32px;
+  overflow-x: auto; scrollbar-width: none;
+}
+.th-row::-webkit-scrollbar { display: none; }
+.th-card { flex: 0 0 290px; cursor: none; transition: transform .4s; }
+.th-card:hover { transform: translateY(-8px); }
+.th-card img {
+  width: 100%; height: 380px; object-fit: cover; display: block;
+  filter: grayscale(25%); transition: filter .5s, transform .5s;
+}
+.th-card:hover img { filter: grayscale(0%); transform: scale(1.03); }
+.th-info { padding: 22px 0 0; }
+.th-info h3 { font-family: 'Cormorant Garamond', serif; font-size: 23px; font-weight: 300; color: var(--cream); margin-bottom: 4px; }
+.th-info .spec { font-size: 10px; letter-spacing: 2.5px; text-transform: uppercase; color: var(--stone); margin-bottom: 10px; }
+.th-bio {
+  font-size: 13px; color: rgba(250,247,242,.6); line-height: 1.7; font-weight: 300;
+  max-height: 0; overflow: hidden; opacity: 0;
+  transition: max-height .5s ease, opacity .5s ease;
+}
+.th-card:hover .th-bio { max-height: 100px; opacity: 1; }
+
+/* ════════════════════════════════
+   SECTION 7 — TESTIMONIALS TICKER
+════════════════════════════════ */
+.testi-sec { background: var(--offwhite); padding: 100px 0; overflow: hidden; }
+.testi-hd { text-align: center; padding: 0 40px; margin-bottom: 56px; }
+.ticker-outer { position: relative; overflow: hidden; }
+.ticker-outer::before,
+.ticker-outer::after {
+  content: ''; position: absolute; top: 0; width: 180px; height: 100%; z-index: 2; pointer-events: none;
+}
+.ticker-outer::before { left: 0;  background: linear-gradient(to right, var(--offwhite), transparent); }
+.ticker-outer::after  { right: 0; background: linear-gradient(to left,  var(--offwhite), transparent); }
+.ticker-track {
+  display: flex; gap: 28px; width: max-content;
+  animation: tickerMove 34s linear infinite;
+}
+.ticker-track:hover { animation-play-state: paused; }
+@keyframes tickerMove {
+  0%   { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
+}
+.rev-card { flex: 0 0 370px; background: #fff; border: 1px solid rgba(196,168,130,.28); padding: 34px; }
+.rev-stars { color: var(--gold); font-size: 13px; letter-spacing: 2px; margin-bottom: 14px; }
+.rev-text {
+  font-family: 'Cormorant Garamond', serif; font-size: 17px;
+  font-style: italic; color: var(--green); line-height: 1.65; margin-bottom: 18px; font-weight: 300;
+}
+.rev-author { font-size: 10px; letter-spacing: 2px; text-transform: uppercase; color: var(--stone); }
+
+/* ════════════════════════════════
+   SECTION 8 — VISIT
+════════════════════════════════ */
+.visit { background: var(--cream); padding: 100px 60px; }
+.visit-inner { max-width: 1160px; margin: 0 auto; display: grid; grid-template-columns: 1fr 1fr; gap: 80px; align-items: start; }
+.visit-info h2 {
+  font-family: 'Cormorant Garamond', serif; font-size: 52px;
+  font-weight: 300; font-style: italic; color: var(--green); line-height: 1.1; margin-bottom: 44px;
+}
+.vd { display: flex; gap: 18px; margin-bottom: 30px; align-items: flex-start; }
+.vd-icon { width: 36px; flex-shrink: 0; padding-top: 2px; }
+.vd-icon svg { width: 18px; height: 18px; stroke: var(--gold); fill: none; stroke-width: 1.5; }
+.vd-body label { display: block; font-size: 10px; letter-spacing: 3px; text-transform: uppercase; color: var(--gold); margin-bottom: 5px; }
+.vd-body p { font-size: 15px; color: var(--green); line-height: 1.75; font-weight: 300; }
+.visit-map { width: 100%; height: 440px; border: none; filter: grayscale(15%) contrast(1.05); }
+
+/* ════════════════════════════════
+   FOOTER
+════════════════════════════════ */
+footer { background: var(--green); padding: 64px 40px; text-align: center; }
+.foot-logo {
+  font-family: 'Cormorant Garamond', serif; font-size: 44px;
+  font-weight: 300; font-style: italic; color: var(--gold);
+  display: block; margin-bottom: 34px; letter-spacing: 2px;
+}
+.foot-nav { display: flex; justify-content: center; gap: 40px; flex-wrap: wrap; margin-bottom: 36px; }
+.foot-nav a {
+  font-size: 11px; letter-spacing: 2px; text-transform: uppercase;
+  color: rgba(250,247,242,.55); text-decoration: none; cursor: none; transition: color .3s;
+}
+.foot-nav a:hover { color: var(--stone); }
+.foot-rule { width: 56px; height: 1px; background: rgba(196,168,130,.35); margin: 0 auto 28px; }
+.foot-copy { font-size: 11px; color: rgba(250,247,242,.3); letter-spacing: .5px; }
+
+/* ════════════════════════════════
+   BOOKING MODAL
+════════════════════════════════ */
+.modal {
+  position: fixed; inset: 0; z-index: 2000;
+  background: var(--green);
+  display: flex; align-items: center; justify-content: center;
+  opacity: 0; pointer-events: none; transition: opacity .5s;
+}
+.modal.open { opacity: 1; pointer-events: all; }
+.modal-box { width: 100%; max-width: 540px; padding: 64px 44px; position: relative; }
+.modal-x {
+  position: absolute; top: 0; right: 44px;
+  background: none; border: none; color: var(--stone);
+  font-size: 30px; cursor: none; line-height: 1; transition: color .3s;
+}
+.modal-x:hover { color: #fff; }
+.modal-ey { font-size: 10px; letter-spacing: 4px; text-transform: uppercase; color: var(--stone); display: block; margin-bottom: 10px; }
+.modal-h {
+  font-family: 'Cormorant Garamond', serif; font-size: 48px;
+  font-weight: 300; font-style: italic; color: var(--cream); line-height: 1.1; margin-bottom: 40px;
+}
+.mf { margin-bottom: 22px; }
+.mf label { display: block; font-size: 10px; letter-spacing: 3px; text-transform: uppercase; color: var(--stone); margin-bottom: 7px; }
+.mf input, .mf select {
+  width: 100%; background: transparent; border: none;
+  border-bottom: 1px solid rgba(196,168,130,.38);
+  color: var(--cream); font-family: 'Inter', sans-serif; font-size: 15px;
+  font-weight: 300; padding: 10px 0; outline: none; cursor: none;
+  transition: border-color .3s; appearance: none;
+}
+.mf input:focus, .mf select:focus { border-color: var(--stone); }
+.mf select option { background: var(--green); }
+.mf input[type="date"]::-webkit-calendar-picker-indicator { filter: invert(.4); cursor: none; }
+.modal-submit {
+  width: 100%; background: var(--gold); border: none; color: #fff;
+  font-family: 'Inter', sans-serif; font-size: 11px; font-weight: 500;
+  letter-spacing: 3px; text-transform: uppercase; padding: 18px;
+  margin-top: 14px; cursor: none; transition: background .3s;
+}
+.modal-submit:hover { background: #9e7040; }
+</style>
+</head>
+<body>
+
+<!-- Cursor -->
+<div class="cursor" id="cursor"></div>
+
+<!-- Sound toggle -->
+<button class="sound-btn" id="soundBtn">
+  <svg viewBox="0 0 24 24"><path d="M11 5L6 9H2v6h4l5 4V5z" fill="var(--gold)"/><path d="M15.54 8.46a5 5 0 0 1 0 7.07" stroke-linecap="round"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14" stroke-linecap="round"/></svg>
+</button>
+
+<!-- Fixed book button -->
+<button class="book-fixed" id="bookFixed">Book Now</button>
+
+<!-- ═══ IMAGE SEQUENCE HERO ═══ -->
+<div id="heroWrap">
+  <div id="heroSticky">
+    <img id="heroImg" src="frames/ezgif-frame-001.jpg" alt="" />
+    <div id="heroOverlay">
+      <p class="hero-eyebrow">Serenova Spa &amp; Wellness</p>
+      <h1 class="hero-heading">A sanctuary<br/>for the senses</h1>
+      <p class="hero-sub">Bespoke treatments &bull; Refined rituals &bull; Total restoration</p>
+      <button class="btn-hero" onclick="openModal()">Reserve Your Experience</button>
+      <div class="scroll-cue" id="scrollCue">
+        <span>Discover</span>
+        <div class="scroll-line"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ BOTANICALS ═══ -->
+<section class="botanicals">
+  <svg class="leaf leaf-1" width="110" height="190" viewBox="0 0 110 190">
+    <ellipse cx="55" cy="95" rx="28" ry="85" fill="#2D4A3E" transform="rotate(-18 55 95)"/>
+    <line x1="55" y1="18" x2="55" y2="172" stroke="#1a2d25" stroke-width="1.2"/>
+  </svg>
+  <svg class="leaf leaf-2" width="85" height="150" viewBox="0 0 85 150">
+    <ellipse cx="42" cy="75" rx="20" ry="65" fill="#C4A882" transform="rotate(14 42 75)"/>
+    <line x1="42" y1="14" x2="42" y2="136" stroke="#a08562" stroke-width="1"/>
+  </svg>
+  <svg class="leaf leaf-3" width="140" height="240" viewBox="0 0 140 240">
+    <ellipse cx="70" cy="120" rx="33" ry="105" fill="#2D4A3E" transform="rotate(28 70 120)"/>
+    <line x1="70" y1="18" x2="70" y2="222" stroke="#1a2d25" stroke-width="1.4"/>
+  </svg>
+  <svg class="leaf leaf-4" width="55" height="85" viewBox="0 0 55 85">
+    <ellipse cx="27" cy="42" rx="17" ry="38" fill="#B8935A" transform="rotate(-28 27 42)"/>
+  </svg>
+  <svg class="leaf leaf-5" width="95" height="170" viewBox="0 0 95 170">
+    <ellipse cx="47" cy="85" rx="24" ry="76" fill="#2D4A3E" transform="rotate(11 47 85)"/>
+    <line x1="47" y1="12" x2="47" y2="158" stroke="#1a2d25" stroke-width="1.1"/>
+  </svg>
+  <div class="bot-text fade-up">
+    <h2>Crafted for<br/>your wellbeing</h2>
+    <p>Serenova &bull; Est. 2007</p>
+  </div>
+</section>
+
+<!-- ═══ TREATMENTS ═══ -->
+<section class="treatments">
+  <div class="treatments-top fade-up">
+    <span class="sec-label">Our Offerings</span>
+    <h2 class="sec-heading">The Treatment Menu</h2>
+    <div class="filter-row">
+      <button class="filt active" data-f="all">All</button>
+      <button class="filt" data-f="massage">Massage</button>
+      <button class="filt" data-f="facial">Facial</button>
+      <button class="filt" data-f="body">Body</button>
+      <button class="filt" data-f="couples">Couples</button>
+    </div>
+  </div>
+  <div class="cards-grid" id="cardsGrid">
+    <div class="flip-card" data-c="massage"><div class="flip-inner">
+      <div class="flip-front"><div class="f-line"></div><h3>Swedish Massage</h3><span class="f-cat">Massage</span></div>
+      <div class="flip-back"><h3>Swedish Massage</h3><div class="b-meta">60 or 90 min</div><p>Long, flowing strokes that melt tension and quiet the mind. Our most beloved treatment for first-time guests.</p><div class="b-price">from $70</div></div>
+    </div></div>
+    <div class="flip-card" data-c="massage"><div class="flip-inner">
+      <div class="flip-front"><div class="f-line"></div><h3>Deep Tissue Ritual</h3><span class="f-cat">Massage</span></div>
+      <div class="flip-back"><h3>Deep Tissue Ritual</h3><div class="b-meta">60 or 90 min</div><p>Targeted pressure to release chronic muscle tension and restore full mobility. Therapeutic and deeply restorative.</p><div class="b-price">from $80</div></div>
+    </div></div>
+    <div class="flip-card" data-c="massage"><div class="flip-inner">
+      <div class="flip-front"><div class="f-line"></div><h3>Hot Stone Journey</h3><span class="f-cat">Massage</span></div>
+      <div class="flip-back"><h3>Hot Stone Journey</h3><div class="b-meta">75 min</div><p>Heated basalt stones glide across the body, melting tension at the deepest level. Warming and profoundly grounding.</p><div class="b-price">$120</div></div>
+    </div></div>
+    <div class="flip-card" data-c="massage"><div class="flip-inner">
+      <div class="flip-front"><div class="f-line"></div><h3>Prenatal Massage</h3><span class="f-cat">Massage</span></div>
+      <div class="flip-back"><h3>Prenatal Massage</h3><div class="b-meta">60 min</div><p>A safe, nurturing massage designed specifically for expecting mothers at every stage of pregnancy.</p><div class="b-price">$80</div></div>
+    </div></div>
+    <div class="flip-card" data-c="facial"><div class="flip-inner">
+      <div class="flip-front"><div class="f-line"></div><h3>Luminosity Facial</h3><span class="f-cat">Facial</span></div>
+      <div class="flip-back"><h3>Luminosity Facial</h3><div class="b-meta">50 min</div><p>Cleanse, exfoliate, and illuminate. Tailored to your skin type for an immediate, lasting radiant glow.</p><div class="b-price">$65</div></div>
+    </div></div>
+    <div class="flip-card" data-c="facial"><div class="flip-inner">
+      <div class="flip-front"><div class="f-line"></div><h3>Age Reversal Facial</h3><span class="f-cat">Facial</span></div>
+      <div class="flip-back"><h3>Age Reversal Facial</h3><div class="b-meta">60 min</div><p>Advanced peptides and botanical extracts visibly reduce fine lines and restore youthful luminosity to the skin.</p><div class="b-price">$90</div></div>
+    </div></div>
+    <div class="flip-card" data-c="body"><div class="flip-inner">
+      <div class="flip-front"><div class="f-line"></div><h3>Detox Body Wrap</h3><span class="f-cat">Body</span></div>
+      <div class="flip-back"><h3>Detox Body Wrap</h3><div class="b-meta">60 min</div><p>Mineral-rich seaweed draws out impurities while deeply nourishing the skin. Emerge completely renewed.</p><div class="b-price">$90</div></div>
+    </div></div>
+    <div class="flip-card" data-c="body"><div class="flip-inner">
+      <div class="flip-front"><div class="f-line"></div><h3>Ritual Body Scrub</h3><span class="f-cat">Body</span></div>
+      <div class="flip-back"><h3>Ritual Body Scrub</h3><div class="b-meta">45 min</div><p>A full-body exfoliation using sugar, sea salt, and botanical oils. Skin feels impossibly soft afterward.</p><div class="b-price">$70</div></div>
+    </div></div>
+    <div class="flip-card" data-c="couples"><div class="flip-inner">
+      <div class="flip-front"><div class="f-line"></div><h3>Couples Retreat</h3><span class="f-cat">Couples</span></div>
+      <div class="flip-back"><h3>Couples Retreat</h3><div class="b-meta">90 min</div><p>A side-by-side massage journey for two. Begins with a champagne welcome and ends with private relaxation time.</p><div class="b-price">from $220</div></div>
+    </div></div>
+  </div>
+</section>
+
+<!-- ═══ PARALLAX ═══ -->
+<section class="parallax-sec">
+  <div class="parallax-bg" id="plxBg"></div>
+  <div class="parallax-dim"></div>
+  <div class="parallax-txt fade-up">
+    <h2>Every detail.<br/>Every sense.</h2>
+    <p>The Serenova Experience</p>
+  </div>
+</section>
+
+<!-- ═══ BEFORE / AFTER ═══ -->
+<section class="ba-section">
+  <span class="sec-label fade-up">Skin Transformation</span>
+  <h2 class="sec-heading fade-up">See the Difference</h2>
+  <p class="fade-up">Drag the slider to reveal the results of our signature facial treatment</p>
+  <div class="ba-wrap" id="baWrap">
+    <div class="ba-after"></div>
+    <div class="ba-before" id="baBefore"></div>
+    <div class="ba-bar" id="baBar"><div class="ba-knob">&#8596;</div></div>
+    <div class="ba-tag l">Before</div>
+    <div class="ba-tag r">After</div>
+  </div>
+</section>
+
+<!-- ═══ THERAPISTS ═══ -->
+<section class="therapists">
+  <div class="therapists-hd fade-up">
+    <span class="sec-label">Meet the Team</span>
+    <h2 class="sec-heading">Our Therapists</h2>
+  </div>
+  <div class="th-row">
+    <div class="th-card fade-up">
+      <img src="https://images.unsplash.com/photo-1559839734-2b71ea197ec2?auto=format&fit=crop&w=300&h=380&q=80" alt="Elena Moreau" />
+      <div class="th-info">
+        <h3>Elena Moreau</h3>
+        <div class="spec">Lead Massage Therapist</div>
+        <p class="th-bio">Trained in Sweden and Thailand, Elena brings 12 years of expertise in deep tissue and hot stone therapy to every session.</p>
+      </div>
+    </div>
+    <div class="th-card fade-up">
+      <img src="https://images.unsplash.com/photo-1580489944761-15a19d654956?auto=format&fit=crop&w=300&h=380&q=80" alt="Sophia Reyes" />
+      <div class="th-info">
+        <h3>Sophia Reyes</h3>
+        <div class="spec">Senior Esthetician</div>
+        <p class="th-bio">A certified skincare specialist with a background in holistic medicine. Sophia's facials are known for visible, lasting results.</p>
+      </div>
+    </div>
+    <div class="th-card fade-up">
+      <img src="https://images.unsplash.com/photo-1438761681033-6461ffad8d80?auto=format&fit=crop&w=300&h=380&q=80" alt="Amara Osei" />
+      <div class="th-info">
+        <h3>Amara Osei</h3>
+        <div class="spec">Body Treatment Specialist</div>
+        <p class="th-bio">Amara blends West African wellness traditions with modern spa techniques for a truly transformative ritual experience.</p>
+      </div>
+    </div>
+    <div class="th-card fade-up">
+      <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=300&h=380&q=80" alt="Naomi Chen" />
+      <div class="th-info">
+        <h3>Naomi Chen</h3>
+        <div class="spec">Couples &amp; Prenatal Therapist</div>
+        <p class="th-bio">Specializing in prenatal and couples treatments, Naomi creates deeply nurturing experiences tailored to each guest.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ TESTIMONIALS ═══ -->
+<section class="testi-sec">
+  <div class="testi-hd fade-up">
+    <span class="sec-label">Guest Voices</span>
+    <h2 class="sec-heading">What Our Guests Say</h2>
+  </div>
+  <div class="ticker-outer">
+    <div class="ticker-track">
+      <div class="rev-card"><div class="rev-stars">★★★★★</div><p class="rev-text">"An absolutely transcendent experience. From the moment I walked in I felt transported. Elena's hot stone massage was unlike anything I have ever felt."</p><span class="rev-author">Jennifer M. &bull; Google Review</span></div>
+      <div class="rev-card"><div class="rev-stars">★★★★★</div><p class="rev-text">"My skin has never looked better. Sophia customized the facial perfectly for my skin type. I left glowing — and I still am, three weeks later."</p><span class="rev-author">Diane R. &bull; Google Review</span></div>
+      <div class="rev-card"><div class="rev-stars">★★★★★</div><p class="rev-text">"The couples retreat was the most romantic afternoon my husband and I have ever had. The attention to detail — the music, the oils, the room — was extraordinary."</p><span class="rev-author">Ashley &amp; Tom B. &bull; Google Review</span></div>
+      <div class="rev-card"><div class="rev-stars">★★★★★</div><p class="rev-text">"I have visited spas all over the world and Serenova holds its own against the very best. The deep tissue ritual fixed my back after years of chronic pain."</p><span class="rev-author">Marcus L. &bull; Google Review</span></div>
+      <!-- duplicated for seamless loop -->
+      <div class="rev-card"><div class="rev-stars">★★★★★</div><p class="rev-text">"An absolutely transcendent experience. From the moment I walked in I felt transported. Elena's hot stone massage was unlike anything I have ever felt."</p><span class="rev-author">Jennifer M. &bull; Google Review</span></div>
+      <div class="rev-card"><div class="rev-stars">★★★★★</div><p class="rev-text">"My skin has never looked better. Sophia customized the facial perfectly for my skin type. I left glowing — and I still am, three weeks later."</p><span class="rev-author">Diane R. &bull; Google Review</span></div>
+      <div class="rev-card"><div class="rev-stars">★★★★★</div><p class="rev-text">"The couples retreat was the most romantic afternoon my husband and I have ever had. The attention to detail — the music, the oils, the room — was extraordinary."</p><span class="rev-author">Ashley &amp; Tom B. &bull; Google Review</span></div>
+      <div class="rev-card"><div class="rev-stars">★★★★★</div><p class="rev-text">"I have visited spas all over the world and Serenova holds its own against the very best. The deep tissue ritual fixed my back after years of chronic pain."</p><span class="rev-author">Marcus L. &bull; Google Review</span></div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ VISIT ═══ -->
+<section class="visit">
+  <div class="visit-inner">
+    <div class="visit-info fade-up">
+      <span class="sec-label">Find Us</span>
+      <h2>Come visit<br/>Serenova</h2>
+      <div class="vd">
+        <div class="vd-icon"><svg viewBox="0 0 24 24"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg></div>
+        <div class="vd-body"><label>Address</label><p>494 Elmwood Ave, Suite 2<br/>Lakewood, IL 60014</p></div>
+      </div>
+      <div class="vd">
+        <div class="vd-icon"><svg viewBox="0 0 24 24"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 12 19.79 19.79 0 0 1 1.63 3.38 2 2 0 0 1 3.61 1h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L7.91 8.69a16 16 0 0 0 6.18 6.18l1.86-1.86a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/></svg></div>
+        <div class="vd-body"><label>Phone</label><p>(708) 555-0193</p></div>
+      </div>
+      <div class="vd">
+        <div class="vd-icon"><svg viewBox="0 0 24 24"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg></div>
+        <div class="vd-body"><label>Email</label><p>hello@serenovaspa.com</p></div>
+      </div>
+      <div class="vd">
+        <div class="vd-icon"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg></div>
+        <div class="vd-body"><label>Hours</label><p>Mon – Wed &nbsp;&nbsp;10:00 AM – 8:00 PM<br/>Thursday &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;10:00 AM – 9:00 PM<br/>Fri – Sat &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;9:00 AM – 9:00 PM<br/>Sunday &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;10:00 AM – 6:00 PM</p></div>
+      </div>
+    </div>
+    <div class="fade-up">
+      <iframe class="visit-map"
+        src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d47706.7!2d-88.1253!3d42.2167!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x880f8f5b2c9f1a8d%3A0x4c5e3ef2c5b33f9e!2sLakewood%2C+IL!5e0!3m2!1sen!2sus!4v1700000000000"
+        allowfullscreen loading="lazy" referrerpolicy="no-referrer-when-downgrade">
+      </iframe>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ FOOTER ═══ -->
+<footer>
+  <span class="foot-logo">Serenova</span>
+  <nav class="foot-nav">
+    <a href="#">Home</a>
+    <a href="#">Treatments</a>
+    <a href="#">Our Team</a>
+    <a href="#">Gift Cards</a>
+    <a href="#">Visit Us</a>
+    <a href="#">Book Now</a>
+  </nav>
+  <div class="foot-rule"></div>
+  <p class="foot-copy">&copy; 2024 Serenova Spa &amp; Wellness. All rights reserved.</p>
+</footer>
+
+<!-- ═══ BOOKING MODAL ═══ -->
+<div class="modal" id="modal">
+  <div class="modal-box">
+    <button class="modal-x" onclick="closeModal()">&times;</button>
+    <span class="modal-ey">Reserve Your Experience</span>
+    <h2 class="modal-h">Book a<br/>Treatment</h2>
+    <div class="mf"><label>Preferred Date</label><input type="date" /></div>
+    <div class="mf">
+      <label>Select Treatment</label>
+      <select>
+        <option value="">Choose a treatment...</option>
+        <option>Swedish Massage — 60 min ($70)</option>
+        <option>Swedish Massage — 90 min ($100)</option>
+        <option>Deep Tissue Ritual — 60 min ($80)</option>
+        <option>Hot Stone Journey — 75 min ($120)</option>
+        <option>Prenatal Massage — 60 min ($80)</option>
+        <option>Luminosity Facial — 50 min ($65)</option>
+        <option>Age Reversal Facial — 60 min ($90)</option>
+        <option>Detox Body Wrap — 60 min ($90)</option>
+        <option>Couples Retreat — 90 min (from $220)</option>
+      </select>
+    </div>
+    <div class="mf">
+      <label>Preferred Therapist</label>
+      <select>
+        <option value="">No preference</option>
+        <option>Elena Moreau</option>
+        <option>Sophia Reyes</option>
+        <option>Amara Osei</option>
+        <option>Naomi Chen</option>
+      </select>
+    </div>
+    <div class="mf"><label>Your Name</label><input type="text" placeholder="Full name" /></div>
+    <button class="modal-submit">Confirm Reservation</button>
+  </div>
+</div>
+
+<script>
+/* ═══════════════════════════════════════════════
+   IMAGE SEQUENCE HERO
+   21 frames preloaded on page load. rAF loop lerps
+   a float index and swaps img.src on integer change.
+═══════════════════════════════════════════════ */
+(function () {
+  const img       = document.getElementById('heroImg');
+  const heroWrap  = document.getElementById('heroWrap');
+  const scrollCue = document.getElementById('scrollCue');
+
+  const TOTAL = 21;
+
+  const srcs = [];
+  for (let i = 1; i <= TOTAL; i++) {
+    srcs.push('frames/ezgif-frame-' + String(i).padStart(3, '0') + '.jpg');
+  }
+
+  let loaded = 0;
+  let ready  = false;
+  const imgs = srcs.map(src => {
+    const el = new Image();
+    el.onload = () => { if (++loaded === TOTAL) { ready = true; } };
+    el.src = src;
+    return el;
+  });
+
+  let lerpIdx = 0;
+  let lastIdx = -1;
+
+  function getTarget() {
+    const scrollable = heroWrap.offsetHeight - window.innerHeight;
+    const progress   = Math.min(Math.max(window.scrollY / scrollable, 0), 1);
+    return progress * (TOTAL - 1);
+  }
+
+  function tick() {
+    requestAnimationFrame(tick);
+    if (!ready) return;
+
+    lerpIdx += (getTarget() - lerpIdx) * 0.12;
+    const idx = Math.min(Math.round(lerpIdx), TOTAL - 1);
+    if (idx !== lastIdx) { img.src = imgs[idx].src; lastIdx = idx; }
+
+    if (scrollCue) {
+      const scrollable = heroWrap.offsetHeight - window.innerHeight;
+      const p = Math.min(Math.max(window.scrollY / scrollable, 0), 1);
+      scrollCue.style.opacity = Math.max(0, 1 - p / 0.08);
+    }
+  }
+
+  tick();
+})();
+
+// ── Custom cursor
+const cur = document.getElementById('cursor');
+document.addEventListener('mousemove', e => {
+  cur.style.left = e.clientX + 'px';
+  cur.style.top  = e.clientY + 'px';
+});
+document.querySelectorAll('a,button,.flip-card,.th-card,.filt,.ba-wrap').forEach(el => {
+  el.addEventListener('mouseenter', () => cur.classList.add('big'));
+  el.addEventListener('mouseleave', () => cur.classList.remove('big'));
+});
+
+// ── Modal
+function openModal()  { document.getElementById('modal').classList.add('open');  document.body.style.overflow = 'hidden'; }
+function closeModal() { document.getElementById('modal').classList.remove('open'); document.body.style.overflow = ''; }
+document.getElementById('bookFixed').addEventListener('click', openModal);
+document.getElementById('modal').addEventListener('click', e => { if (e.target === e.currentTarget) closeModal(); });
+document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModal(); });
+
+// ── Ambient sound (Web Audio API solfeggio tones)
+let actx = null, mGain = null, soundOn = false;
+const sBtn = document.getElementById('soundBtn');
+function buildAudio() {
+  actx  = new (window.AudioContext || window.webkitAudioContext)();
+  mGain = actx.createGain();
+  mGain.gain.setValueAtTime(0, actx.currentTime);
+  mGain.gain.linearRampToValueAtTime(0.045, actx.currentTime + 3);
+  mGain.connect(actx.destination);
+  [[174,.015],[285,.012],[396,.009],[528,.007],[741,.005]].forEach(([f,v]) => {
+    const o = actx.createOscillator(), g = actx.createGain();
+    o.type = 'sine'; o.frequency.value = f; g.gain.value = v;
+    o.connect(g); g.connect(mGain); o.start();
+  });
+}
+sBtn.addEventListener('click', () => {
+  if (!soundOn) {
+    if (!actx) buildAudio();
+    else { mGain.gain.setValueAtTime(0, actx.currentTime); mGain.gain.linearRampToValueAtTime(0.045, actx.currentTime + 2); }
+    soundOn = true; sBtn.style.borderColor = 'var(--stone)'; sBtn.style.opacity = '1';
+  } else {
+    mGain.gain.linearRampToValueAtTime(0, actx.currentTime + 1.5);
+    soundOn = false; sBtn.style.borderColor = 'rgba(184,147,90,.35)'; sBtn.style.opacity = '.6';
+  }
+});
+
+// ── Treatment filter
+document.querySelectorAll('.filt').forEach(b => {
+  b.addEventListener('click', () => {
+    document.querySelectorAll('.filt').forEach(x => x.classList.remove('active'));
+    b.classList.add('active');
+    const f = b.dataset.f;
+    document.querySelectorAll('.flip-card').forEach(c => {
+      c.style.display = (f === 'all' || c.dataset.c === f) ? '' : 'none';
+    });
+  });
+});
+
+// ── Before/After slider
+const baWrap   = document.getElementById('baWrap');
+const baBefore = document.getElementById('baBefore');
+const baBar    = document.getElementById('baBar');
+let drag = false;
+function moveSplit(x) {
+  const r = baWrap.getBoundingClientRect();
+  const p = Math.min(Math.max((x - r.left) / r.width, .02), .98);
+  baBefore.style.clipPath = `inset(0 ${(1-p)*100}% 0 0)`;
+  baBar.style.left = (p*100) + '%';
+}
+baWrap.addEventListener('mousedown',  e => { drag = true; moveSplit(e.clientX); });
+baWrap.addEventListener('touchstart', e => { drag = true; moveSplit(e.touches[0].clientX); }, {passive:true});
+window.addEventListener('mousemove',  e => { if (drag) moveSplit(e.clientX); });
+window.addEventListener('touchmove',  e => { if (drag) moveSplit(e.touches[0].clientX); }, {passive:true});
+window.addEventListener('mouseup',    () => drag = false);
+window.addEventListener('touchend',   () => drag = false);
+
+// ── Parallax
+const plxBg = document.getElementById('plxBg');
+window.addEventListener('scroll', () => {
+  const sec = plxBg.closest('section');
+  const r   = sec.getBoundingClientRect();
+  const p   = -r.top / (r.height + window.innerHeight);
+  plxBg.style.transform = `translateY(${p * 90}px)`;
+}, {passive:true});
+
+// ── Intersection Observer
+const io = new IntersectionObserver(entries => {
+  entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('visible'); io.unobserve(e.target); } });
+}, { threshold: .12 });
+document.querySelectorAll('.fade-up').forEach(el => io.observe(el));
+</script>
+</body>
+</html>
