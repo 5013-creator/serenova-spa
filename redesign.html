@@ -84,12 +84,10 @@ body {
   height: 100vh;
   overflow: hidden;
 }
-#heroImg {
+#heroCanvas {
   position: absolute;
   top: 0; left: 0;
   width: 100%; height: 100%;
-  object-fit: cover;
-  object-position: center;
   display: block;
 }
 #heroOverlay {
@@ -471,7 +469,7 @@ footer { background: var(--green); padding: 64px 40px; text-align: center; }
 <!-- ═══ IMAGE SEQUENCE HERO ═══ -->
 <div id="heroWrap">
   <div id="heroSticky">
-    <img id="heroImg" src="frames/ezgif-frame-001.jpg" alt="" />
+    <canvas id="heroCanvas"></canvas>
     <div id="heroOverlay">
       <p class="hero-eyebrow">Serenova Spa &amp; Wellness</p>
       <h1 class="hero-heading">A sanctuary<br/>for the senses</h1>
@@ -738,53 +736,51 @@ footer { background: var(--green); padding: 64px 40px; text-align: center; }
 
 <script>
 /* ═══════════════════════════════════════════════
-   IMAGE SEQUENCE HERO
-   All 21 frames are decoded into Image objects the
-   moment the script runs. Scroll is locked via
-   overflow:hidden on <body> until every onload fires.
-   Only then is the rAF scroll listener activated —
-   guaranteeing zero on-demand loading during scrub.
+   IMAGE SEQUENCE HERO — SPRITE SHEET
+   Single network request: frames/sprite.jpg
+   1280 x 15120px (21 frames stacked vertically).
+   Canvas draws the correct 1280x720 slice each tick
+   with cover-scaling to fill any viewport size.
 ═══════════════════════════════════════════════ */
 (function () {
-  const img       = document.getElementById('heroImg');
+  const canvas    = document.getElementById('heroCanvas');
+  const ctx       = canvas.getContext('2d');
   const heroWrap  = document.getElementById('heroWrap');
   const scrollCue = document.getElementById('scrollCue');
   const TOTAL     = 21;
+  const FRAME_H   = 720;   // each frame's natural height in the sprite
+  const FRAME_W   = 1280;  // each frame's natural width
 
-  // ── Lock scroll immediately so the user can't
-  //    interact before frames are in memory ──
-  document.body.style.overflow = 'hidden';
+  // ── Size canvas to viewport; redraw on resize ──
+  function resize() {
+    canvas.width  = window.innerWidth;
+    canvas.height = window.innerHeight;
+    drawFrame(lastIdx);
+  }
+  window.addEventListener('resize', resize);
 
-  // ── Build all src paths ──
-  const srcs = [];
-  for (let i = 1; i <= TOTAL; i++) {
-    srcs.push('frames/ezgif-frame-' + String(i).padStart(3, '0') + '.jpg');
+  // ── Draw one frame from the sprite with cover scaling ──
+  let lastIdx = 0;
+  function drawFrame(idx) {
+    if (!sprite.complete || !sprite.naturalHeight) return;
+    const cW = canvas.width, cH = canvas.height;
+    const scale = Math.max(cW / FRAME_W, cH / FRAME_H);
+    const dW    = FRAME_W * scale,  dH = FRAME_H * scale;
+    const dx    = (cW - dW) / 2,   dy = (cH - dH) / 2;
+    ctx.drawImage(sprite, 0, idx * FRAME_H, FRAME_W, FRAME_H, dx, dy, dW, dH);
+    lastIdx = idx;
   }
 
-  // ── Preload: create every Image object right now,
-  //    before any scroll event could fire ──
-  let loaded = 0;
-  const imgs = srcs.map(src => {
-    const el  = new Image();
-    el.onload = el.onerror = () => {
-      // count both successes and failures so we never stall
-      if (++loaded === TOTAL) onReady();
-    };
-    el.src = src;
-    return el;
-  });
+  // ── Lock scroll until sprite is ready ──
+  document.body.style.overflow = 'hidden';
 
-  // ── Called once every frame has reported loaded ──
-  function onReady() {
-    // Show frame 1 from the decoded image object (not a string path)
-    img.src = imgs[0].src;
+  const sprite = new Image();
+  sprite.onload = function () {
+    resize();                          // sets canvas size + draws frame 0
+    document.body.style.overflow = ''; // unlock scroll
 
-    // Unlock scroll
-    document.body.style.overflow = '';
-
-    // Wire up the rAF loop now that all frames are in memory
+    // ── rAF loop — lerp float index, draw on integer change ──
     let lerpIdx = 0;
-    let lastIdx = -1;
 
     function getTarget() {
       const scrollable = heroWrap.offsetHeight - window.innerHeight;
@@ -794,14 +790,9 @@ footer { background: var(--green); padding: 64px 40px; text-align: center; }
 
     function tick() {
       requestAnimationFrame(tick);
-
       lerpIdx += (getTarget() - lerpIdx) * 0.12;
       const idx = Math.min(Math.round(lerpIdx), TOTAL - 1);
-
-      if (idx !== lastIdx) {
-        img.src = imgs[idx].src;
-        lastIdx = idx;
-      }
+      if (idx !== lastIdx) drawFrame(idx);
 
       if (scrollCue) {
         const scrollable = heroWrap.offsetHeight - window.innerHeight;
@@ -809,9 +800,10 @@ footer { background: var(--green); padding: 64px 40px; text-align: center; }
         scrollCue.style.opacity = Math.max(0, 1 - p / 0.08);
       }
     }
-
     tick();
-  }
+  };
+  sprite.onerror = () => { document.body.style.overflow = ''; };
+  sprite.src = 'frames/sprite.jpg';
 })();
 
 // ── Custom cursor
